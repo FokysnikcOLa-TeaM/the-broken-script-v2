@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Broken Script - Фрагменты сценария</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            color: #ff0030;
+            background-color: #0a0000;
+            overflow-x: hidden;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 0, 0, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 60%, rgba(255, 0, 0, 0.1) 0%, transparent 20%),
+                linear-gradient(45deg, #0a0000 25%, #1a0000 25%, #1a0000 50%, #0a0000 50%, #0a0000 75%, #1a0000 75%, #1a0000 100%);
+            background-size: 100% 100%, 100% 100%, 10px 10px;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+            background: rgba(20, 0, 0, 0.8);
+            border: 1px solid #ff0030;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+        
+        .glitch-effect {
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 4rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+            text-shadow: 2px 2px 0 #000000, -2px -2px 0 #800000;
+            animation: glitch 5s infinite;
+            color: #ff0030;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #ff0030;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+        
+        h3 {
+            font-size: 1.8rem;
+            margin: 30px 0 15px;
+            color: #ff0030;
+            text-shadow: 0 0 8px rgba(255, 0, 0, 0.4);
+        }
+        
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #ff0030;
+        }
+        
+        .broken-text {
+            font-family: 'Courier New', monospace;
+            color: #ff0030;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            margin: 40px 0;
+            padding: 20px;
+            border-left: 3px solid #ff0030;
+            background: rgba(20, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .broken-text::before {
+            content: ">";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #ff0030;
+            animation: blink 1s infinite;
+        }
+        
+        .fragments {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin: 60px 0;
+        }
+        
+        .fragment {
+            width: 300px;
+            height: 250px;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #ff0030;
+            transform: rotate(2deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            padding: 10px;
+        }
+        
+        .fragment:nth-child(even) {
+            transform: rotate(-2deg);
+        }
+        
+        .fragment:hover {
+            transform: rotate(0deg) scale(1.05);
+            background: rgba(255, 0, 0, 0.2);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            z-index: 10;
+        }
+        
+        .fragment::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255, 0, 0, 0.2) 50%, transparent 60%);
+            animation: scan 3s linear infinite;
+        }
+        
+        .fragment img {
+            max-width: 100%;
+            max-height: 150px;
+            object-fit: contain;
+            transition: all 0.3s;
+        }
+        
+        .fragment:hover img {
+            filter: sepia(100%) hue-rotate(-20deg) saturate(500%) contrast(150%);
+        }
+        
+        .fragment-title {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #ff0030;
+            width: 100%;
+        }
+        
+        .message-btn {
+            background: #ff0030;
+            color: #000;
+            border: none;
+            padding: 8px 15px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .message-btn:hover {
+            background: #ff3357;
+            box-shadow: 0 0 10px #ff0030;
+        }
+        
+        .matrix-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .host-info {
+            text-align: center;
+            margin: 60px 0;
+            padding: 30px;
+            border: 1px dashed #ff0030;
+            background: rgba(20, 0, 0, 0.7);
+        }
+        
+        .url-box {
+            font-family: 'Courier New', monospace;
+            padding: 15px;
+            background: #100000;
+            border: 1px solid #ff0030;
+            color: #ff0030;
+            margin: 20px auto;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .url-box::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 10px;
+            height: 100%;
+            background: rgba(255, 0, 0, 0.3);
+            animation: cursor 1s infinite;
+        }
+        
+        .fragment-info {
+            background: rgba(30, 0, 0, 0.7);
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #ff0030;
+            border-radius: 5px;
+        }
+        
+        .fragment-info h3 {
+            border-bottom: 1px solid #ff0030;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .blood-drip {
+            position: fixed;
+            top: -50px;
+            width: 5px;
+            height: 50px;
+            background: linear-gradient(to bottom, transparent, #ff0030);
+            animation: drip 10s linear infinite;
+            z-index: 5;
+            opacity: 0.7;
+        }
+        
+        .center-icon {
+            display: block;
+            margin: 30px auto;
+            width: 160px;
+            height: 160px;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); color: #ff0030; }
+            20% { transform: translate(-5px, 5px); color: #000000; }
+            40% { transform: translate(-5px, -5px); color: #800000; }
+            60% { transform: translate(5px, 5px); color: #ff0030; }
+            80% { transform: translate(5px, -5px); color: #500000; }
+            100% { transform: translate(0); color: #ff0030; }
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        
+        @keyframes cursor {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes drip {
+            0% { 
+                transform: translateY(0);
+                height: 50px;
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            95% {
+                opacity: 0.7;
+            }
+            100% { 
+                transform: translateY(110vh);
+                height: 100px;
+                opacity: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
+            .fragment {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .fragments {
+                gap: 20px;
+            }
+            
+            .center-icon {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-background" id="matrixBackground"></div>
+    
+    <!-- Кровавые капли -->
+    <div class="blood-drip" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="blood-drip" style="left: 20%; animation-delay: 2s;"></div>
+    <div class="blood-drip" style="left: 50%; animation-delay: 5s;"></div>
+    <div class="blood-drip" style="left: 80%; animation-delay: 7s;"></div>
+    <div class="blood-drip" style="left: 90%; animation-delay: 9s;"></div>
+    
+    <div class="container">
+        <div class="glitch-effect">
+            <h1>The Broken Script</h1>
+            <p>Добро пожаловать в цифровой ад, где код истекает кровью, а реальность разорвана на части</p>
+            <img src="https://static.wikitide.net/tbotvwiki/a/ab/Wiki_icon.png?20230825232057" alt="Иконка" class="center-icon">
+        </div>
+        
+        <div class="broken-text">
+            <p>ПРЕДУПРЕЖДЕНИЕ: СИСТЕМА ЗАРАЖЕНА</p>
+            <p>ЗАГРУЗКА ФРАГМЕНТОВ СЦЕНАРИЯ...</p>
+            <p>ФРАГМЕНТ 1: [ДОСТУП РАЗРЕШЕН]</p>
+            <p>ФРАГМЕНТ 2: [ДОСТУП РАЗРЕШЕН]</p>
+            <p>ФРАГМЕНТ 3: [ДОСТУП РАЗРЕШЕН]</p>
+        </div>
+        
+        <h2 style="text-align: center;">Обнаруженные фрагменты сценария</h2>
+        
+        <div class="fragments">
+            <!-- Фрагмент 1 -->
+            <div class="fragment">
+                <img src="https://thebrokenscript.wiki.gg/images/FakeBSOD.png?8e9afa" alt="Фрагмент 1 - FakeBSOD">
+                <div class="fragment-title">ФРАГМЕНТ_01: Синий экран</div>
+            </div>
+            
+            <!-- Фрагмент 2 -->
+            <div class="fragment">
+                <img src="https://thebrokenscript.wiki.gg/images/Error3.png?5a6d02=&format=original" alt="Фрагмент 2 - Error3">
+                <div class="fragment-title">ФРАГМЕНТ_02: Ошибка системы</div>
+            </div>
+            
+            <!-- Фрагмент 3 с кнопкой -->
+            <div class="fragment">
+                <img src="https://thebrokenscript.wiki.gg/images/Day_b_pillars.png?d791de=&format=original" alt="Фрагмент 3 - Day_b_pillars">
+                <div class="fragment-title">ФРАГМЕНТ_03: Столпы дня</div>
+                <button class="message-btn" onclick="showMessage()">Послание</button>
+            </div>
+        </div>
+        
+        <div class="fragment-info">
+            <h3>ФРАГМЕНТ_01: Синий экран</h3>
+            <p>Идентификация: Имитация экрана смерти</p>
+            <p>Статус: Зараженный элемент сценария</p>
+            <p>Происхождение: Неизвестно. Обнаружен в секторе 7G.</p>
+            <p>Восстановление: Невозможно. Фрагмент содержит вирус.</p>
+        </div>
+        
+        <div class="fragment-info">
+            <h3>ФРАГМЕНТ_02: Ошибка системы</h3>
+            <p>Идентификация: Сообщение об ошибке #3</p>
+            <p>Статус: Частично заражен, некоторые данные читаемы</p>
+            <p>Происхождение: Обнаружен в архивах основной системы.</p>
+            <p>Содержание: Упоминание о нарушении целостности сценария.</p>
+            <p>Восстановление: Частично возможно. Анализ продолжается.</p>
+        </div>
+        
+        <div class="fragment-info">
+            <h3>ФРАГМЕНТ_03: Столпы дня</h3>
+            <p>Идентификация: Архитектурные структуры неизвестного происхождения</p>
+            <p>Статус: Критически поврежден, содержит аномалии</p>
+            <p>Происхождение: Обнаружен в зоне B, сектор "День".</p>
+            <p>Содержание: Изображение структур, похожих на ритуальные столпы.</p>
+            <p>Восстановление: Затруднено. Обнаружены следы коррупции данных.</p>
+        </div>
+        
+        <div class="broken-text">
+            <p>АНАЛИЗ ФРАГМЕНТОВ...</p>
+            <p>ОБНАРУЖЕНЫ СЛЕДЫ ВМЕШАТЕЛЬСТВА В СЦЕНАРИЙ</p>
+            <p>ЦЕЛОСТНОСТЬ СИСТЕМЫ НАРУШЕНА</p>
+            <p>РЕКОМЕНДУЕТСЯ НЕМЕДЛЕННАЯ ИЗОЛЯЦИЯ</p>
+        </div>
+        
+        <div class="host-info">
+            <h2>Информация о хостинге</h2>
+            <p>Этот сайт будет доступен в течение 1 месяца по адресу:</p>
+            <div class="url-box">https://information-Fokysnik.voidexp</div>
+            <p>После истечения срока все данные будут удалены, а домен освобожден</p>
+        </div>
+        
+        <div class="broken-text">
+            <p>ПРЕДУПРЕЖДЕНИЕ: ОБНАРУЖЕН ВРЕМЕННЫЙ ХОСТИНГ</p>
+            <p>АКТИВИРОВАН ТАЙМЕР САМОУНИЧТОЖЕНИЯ</p>
+            <p>// 30 дней до полного стирания...</p>
+        </div>
+    </div>
+
+    <script>
+        // Функция для показа сообщения с 6 фрагментами
+        function showMessage() {
+            const windowFeatures = 'width=700,height=1000,left=100,top=100,toolbar=no,menubar=no,location=no,status=no';
+            const newWindow = window.open('', 'Послание', windowFeatures);
+            
+            if (newWindow) {
+                newWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Послание</title>
+                        <style>
+                            body {
+                                background-color: #0a0000;
+                                color: #ff0030;
+                                font-family: 'Courier New', monospace;
+                                padding: 20px;
+                                margin: 0;
+                            }
+                            .message-container {
+                                max-width: 650px;
+                                margin: 0 auto;
+                                background: rgba(20, 0, 0, 0.8);
+                                border: 1px solid #ff0030;
+                                padding: 20px;
+                                box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+                            }
+                            .warning {
+                                background: rgba(255, 0, 0, 0.2);
+                                padding: 15px;
+                                margin-bottom: 20px;
+                                border-left: 3px solid #ff0030;
+                            }
+                            .fragments-list {
+                                display: grid;
+                                grid-template-columns: 1fr;
+                                gap: 20px;
+                            }
+                            .message-item {
+                                background: rgba(255, 0, 0, 0.1);
+                                padding: 15px;
+                                border: 1px solid #ff0030;
+                                position: relative;
+                            }
+                            .message-item::before {
+                                content: ">";
+                                position: absolute;
+                                left: 5px;
+                                top: 15px;
+                                color: #ff0030;
+                            }
+                            .message-text {
+                                margin-left: 20px;
+                                margin-bottom: 10px;
+                            }
+                            .access-status {
+                                color: #00ff00;
+                                float: right;
+                            }
+                            .message-image {
+                                max-width: 100%;
+                                max-height: 150px;
+                                margin: 10px 0;
+                                display: block;
+                                border: 1px solid #ff0030;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="message-container">
+                            <div class="warning">
+                                <p>ПРЕДУПРЕЖДЕНИЕ: СИСТЕМА ЗАМЕТИЛА АКТИВНОСТЬ</p>
+                                <p>ЗАГРУЗКА ПОСЛАНИЙ...</p>
+                            </div>
+                            
+                            <div class="fragments-list">
+                                <div class="message-item">
+                                    <span class="access-status">[ДОСТУП РАЗРЕШЕН]</span>
+                                    <div class="message-text">ФРАГМЕНТ_01: Синий экран смерти был лишь началом</div>
+                                    <img src="https://thebrokenscript.wiki.gg/images/NullEndgameText.png?eb9b75=&format=original" alt="Null Endgame Text" class="message-image">
+                                </div>
+                                
+                                <div class="message-item">
+                                    <span class="access-status">[ДОСТУП РАЗРЕШЕН]</span>
+                                    <div class="message-text">ФРАГМЕНТ_02: Ошибка в матрице реальности</div>
+                                    <img src="https://thebrokenscript.wiki.gg/images/IntegrityStanding.png?406c7c=&format=original" alt="Integrity Standing" class="message-image">
+                                </div>
+                                
+                                <div class="message-item">
+                                    <span class="access-status">[ДОСТУП РАЗРЕШЕН]</span>
+                                    <div class="message-text">ФРАГМЕНТ_03: Столпы содержат древние знания</div>
+                                    <img src="https://thebrokenscript.wiki.gg/images/NullTortureDeadEndWiki.png?c6406b=&format=original" alt="Null Torture Dead End Wiki" class="message-image">
+                                </div>
+                                
+                                <div class="message-item">
+                                    <span class="access-status">[ДОСТУП РАЗРЕШЕН]</span>
+                                    <div class="message-text">ФРАГМЕНТ_04: Код проникает в реальность</div>
+                                    <img src="https://thebrokenscript.wiki.gg/images/A_sight_to_behold.png?5983a4=&format=original" alt="A Sight To Behold" class="message-image">
+                                </div>
+                                
+                                <div class="message-item">
+                                    <span class="access-status">[ДОСТУП РАЗРЕШЕН]</span>
+                                    <div class="message-text">ФРАГМЕНТ_05: Границы между мирами истончаются</div>
+                                </div>
+                                
+                                <div class="message-item">
+                                    <span class="access-status">[ДОСТУП РАЗРЕШЕН]</span>
+                                    <div class="message-text">ФРАГМЕНТ_06: Здесь только Ад на верху</div>
+                                </div>
+                            </div>
+                        </div>
+                    </body>
+                    </html>
+                `);
+                newWindow.document.close();
+            }
+        }
+        
+        // Создание эффекта падающего кровавого кода на фоне
+        const matrixBackground = document.getElementById('matrixBackground');
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        matrixBackground.appendChild(canvas);
+        
+        const characters = '01010101';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+        
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(10, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#ff0030';
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < drops.length; i++) {
+                const text = characters[Math.floor(Math.random() * characters.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                drops[i]++;
+            }
+        }
+        
+        setInterval(drawMatrix, 50);
+        
+        // Адаптация к изменению размера окна
+        window.addEventListener('resize', function() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Добавление эффектов кровавого глитча для изображений при наведении
+        document.querySelectorAll('.fragment img').forEach(function(img) {
+            img.addEventListener('mouseover', function() {
+                img.style.filter = 'sepia(100%) hue-rotate(-20deg) saturate(500%) contrast(150%)';
+                img.style.transform = 'scale(1.1)';
+            });
+            
+            img.addEventListener('mouseout', function() {
+                img.style.filter = 'none';
+                img.style.transform = 'scale(1)';
+            });
+            
+            // Случайные эффекты глитча
+            setInterval(function() {
+                if (Math.random() > 0.9) {
+                    img.style.opacity = '0.8';
+                    setTimeout(function() {
+                        img.style.opacity = '1';
+                    }, 100);
+                }
+            }, 3000);
+        });
+        
+        // Эффект мерцания для текста
+        const brokenTexts = document.querySelectorAll('.broken-text');
+        brokenTexts.forEach(function(text) {
+            setInterval(function() {
+                if (Math.random() > 0.8) {
+                    text.style.opacity = '0.7';
+                    setTimeout(function() {
+                        text.style.opacity = '1';
+                    }, 100);
+                }
+            }, 5000);
+        });
+        
+        // Создание дополнительных кровавых капель
+        function createBloodDrips() {
+            for (let i = 0; i < 5; i++) {
+                const drip = document.createElement('div');
+                drip.className = 'blood-drip';
+                drip.style.left = Math.random() * 100 + '%';
+                drip.style.animationDelay = Math.random() * 10 + 's';
+                drip.style.animationDuration = (5 + Math.random() * 10) + 's';
+                document.body.appendChild(drip);
+            }
+        }
+        
+        // Создаем дополнительные капли каждые 15 секунд
+        setInterval(createBloodDrips, 15000);
+        createBloodDrips();
+    </script>
+</body>
+</html>
